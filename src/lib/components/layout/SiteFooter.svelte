@@ -7,12 +7,17 @@
 	import { scrollTopIfSamePage } from '$lib/utils/nav';
 	import BrandLogo from '../brand/BrandLogo.svelte';
 
+	// `minimal` (páginas de proposta): sem a coluna de navegação.
+	let { minimal = false }: { minimal?: boolean } = $props();
+
 	const year = new Date().getFullYear();
 </script>
 
 <footer class="bg-night text-paper relative">
 	<div
-		class="container-editorial grid gap-14 py-20 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-10 lg:py-24"
+		class="container-editorial grid gap-14 py-20 lg:gap-10 lg:py-24 {minimal
+			? 'lg:grid-cols-[1.6fr_1fr]'
+			: 'lg:grid-cols-[1.4fr_1fr_1fr]'}"
 	>
 		<div class="max-w-sm">
 			<BrandLogo variant="footer" />
@@ -39,22 +44,24 @@
 			</div>
 		</div>
 
-		<nav aria-label="Navegação do rodapé">
-			<h2 class="eyebrow text-blush">Navegue</h2>
-			<ul class="mt-6 flex flex-col gap-3">
-				{#each primaryNav as item (item.href)}
-					<li>
-						<a
-							href={item.href}
-							onclick={(e) => scrollTopIfSamePage(e, item.href, page.url.pathname)}
-							class="link-underline text-paper/80 hover:text-paper text-[0.9375rem]"
-						>
-							{item.label}
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</nav>
+		{#if !minimal}
+			<nav aria-label="Navegação do rodapé">
+				<h2 class="eyebrow text-blush">Navegue</h2>
+				<ul class="mt-6 flex flex-col gap-3">
+					{#each primaryNav as item (item.href)}
+						<li>
+							<a
+								href={item.href}
+								onclick={(e) => scrollTopIfSamePage(e, item.href, page.url.pathname)}
+								class="link-underline text-paper/80 hover:text-paper text-[0.9375rem]"
+							>
+								{item.label}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/if}
 
 		<div>
 			<h2 class="eyebrow text-blush">Contato</h2>

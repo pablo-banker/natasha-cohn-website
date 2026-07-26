@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { onNavigate, afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import SkipLink from '$lib/components/layout/SkipLink.svelte';
 	import SiteHeader from '$lib/components/layout/SiteHeader.svelte';
 	import SiteFooter from '$lib/components/layout/SiteFooter.svelte';
@@ -8,6 +9,10 @@
 	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	let { children } = $props();
+
+	// Nas páginas de proposta (links-fantasma), o cabeçalho fica só com a logo
+	// e o rodapé sem a navegação — um documento focado.
+	const minimalChrome = $derived(page.url.pathname.startsWith('/proposta-'));
 
 	/**
 	 * Transição de página com a View Transitions API. Onde não houver
@@ -45,7 +50,7 @@
 	aria-hidden="true"
 ></div>
 
-<SiteHeader />
+<SiteHeader minimal={minimalChrome} />
 
 <!--
 	Sem padding-top aqui: o header é fixo e transparente sobre a hero.
@@ -56,7 +61,7 @@
 	{@render children()}
 </main>
 
-<SiteFooter />
+<SiteFooter minimal={minimalChrome} />
 <WhatsAppCTA />
 
 <style>

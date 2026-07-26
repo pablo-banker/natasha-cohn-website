@@ -7,6 +7,9 @@
 	import LanguageSwitcher from '../navigation/LanguageSwitcher.svelte';
 	import MobileMenu from '../navigation/MobileMenu.svelte';
 
+	// `minimal` (páginas de proposta): apenas a logo, sem navegação nem CTA.
+	let { minimal = false }: { minimal?: boolean } = $props();
+
 	let scrolled = $state(false);
 	let menuOpen = $state(false);
 
@@ -51,108 +54,119 @@
 		: 'border-b border-transparent bg-transparent'}"
 >
 	<div class="container-editorial flex h-20 items-center justify-between gap-6">
-		<a
-			href="/"
-			class="shrink-0 py-2"
-			aria-label="Natasha Cohn — página inicial"
-			onclick={(e) => scrollTopIfSamePage(e, '/', page.url.pathname)}
-		>
-			<BrandLogo variant="header" decorative />
-		</a>
-
-		<nav aria-label="Navegação principal" class="hidden lg:block">
-			<ul class="flex items-center gap-7">
-				{#each primaryNav as item (item.href)}
-					<li
-						class="relative"
-						onpointerenter={() => item.children && (hoveredSubmenu = item.href)}
-						onpointerleave={() => item.children && (hoveredSubmenu = null)}
-					>
-						<span class="flex items-center gap-1">
-							<a
-								href={item.href}
-								aria-current={isActive(item.href) ? 'page' : undefined}
-								onclick={(e) => scrollTopIfSamePage(e, item.href, page.url.pathname)}
-								class="link-underline text-ink hover:text-clay aria-[current=page]:text-clay py-2
-									text-[0.9375rem] transition-colors"
-							>
-								{item.label}
-							</a>
-
-							{#if item.children}
-								<button
-									type="button"
-									aria-expanded={isSubmenuOpen(item.href)}
-									aria-controls={submenuId(item.href)}
-									onclick={() => (pinnedSubmenu = pinnedSubmenu === item.href ? null : item.href)}
-									class="text-ink-mute hover:text-clay inline-flex size-6 items-center
-										justify-center transition-colors"
-								>
-									<ChevronDown
-										class="size-3.5 transition-transform duration-300 {isSubmenuOpen(item.href)
-											? 'rotate-180'
-											: ''}"
-										aria-hidden="true"
-									/>
-									<span class="sr-only">Abrir submenu de {item.label}</span>
-								</button>
-							{/if}
-						</span>
-
-						{#if item.children && isSubmenuOpen(item.href)}
-							<ul
-								id={submenuId(item.href)}
-								class="border-border bg-surface shadow-lift absolute top-full left-0 min-w-60 border py-2"
-							>
-								{#each item.children as child (child.href)}
-									<li>
-										<a
-											href={child.href}
-											onclick={(e) => {
-												smoothAnchorIfSamePage(e, child.href, page.url.pathname);
-												closeSubmenu();
-											}}
-											class="text-ink-soft hover:bg-paper-deep hover:text-clay block px-5 py-2.5
-												text-[0.9375rem] transition-colors"
-										>
-											{child.label}
-										</a>
-									</li>
-								{/each}
-							</ul>
-						{/if}
-					</li>
-				{/each}
-			</ul>
-		</nav>
-
-		<div class="flex items-center gap-2">
-			<LanguageSwitcher />
-
+		{#if minimal}
+			<!-- Na proposta a logo é só marca, sem link de navegação. -->
+			<span class="shrink-0 py-2">
+				<BrandLogo variant="header" />
+			</span>
+		{:else}
 			<a
-				href="/contato"
-				class="bg-ink text-paper hover:bg-clay hidden min-h-11 items-center px-6 py-3
-					text-[0.875rem] font-medium transition-colors duration-300 lg:inline-flex"
+				href="/"
+				class="shrink-0 py-2"
+				aria-label="Natasha Cohn — página inicial"
+				onclick={(e) => scrollTopIfSamePage(e, '/', page.url.pathname)}
 			>
-				Vamos conversar
+				<BrandLogo variant="header" decorative />
 			</a>
+		{/if}
 
-			<button
-				type="button"
-				onclick={() => (menuOpen = true)}
-				aria-expanded={menuOpen}
-				aria-haspopup="dialog"
-				class="text-ink hover:text-clay -mr-2 inline-flex size-11 items-center
+		{#if !minimal}
+			<nav aria-label="Navegação principal" class="hidden lg:block">
+				<ul class="flex items-center gap-7">
+					{#each primaryNav as item (item.href)}
+						<li
+							class="relative"
+							onpointerenter={() => item.children && (hoveredSubmenu = item.href)}
+							onpointerleave={() => item.children && (hoveredSubmenu = null)}
+						>
+							<span class="flex items-center gap-1">
+								<a
+									href={item.href}
+									aria-current={isActive(item.href) ? 'page' : undefined}
+									onclick={(e) => scrollTopIfSamePage(e, item.href, page.url.pathname)}
+									class="link-underline text-ink hover:text-clay aria-[current=page]:text-clay py-2
+									text-[0.9375rem] transition-colors"
+								>
+									{item.label}
+								</a>
+
+								{#if item.children}
+									<button
+										type="button"
+										aria-expanded={isSubmenuOpen(item.href)}
+										aria-controls={submenuId(item.href)}
+										onclick={() => (pinnedSubmenu = pinnedSubmenu === item.href ? null : item.href)}
+										class="text-ink-mute hover:text-clay inline-flex size-6 items-center
+										justify-center transition-colors"
+									>
+										<ChevronDown
+											class="size-3.5 transition-transform duration-300 {isSubmenuOpen(item.href)
+												? 'rotate-180'
+												: ''}"
+											aria-hidden="true"
+										/>
+										<span class="sr-only">Abrir submenu de {item.label}</span>
+									</button>
+								{/if}
+							</span>
+
+							{#if item.children && isSubmenuOpen(item.href)}
+								<ul
+									id={submenuId(item.href)}
+									class="border-border bg-surface shadow-lift absolute top-full left-0 min-w-60 border py-2"
+								>
+									{#each item.children as child (child.href)}
+										<li>
+											<a
+												href={child.href}
+												onclick={(e) => {
+													smoothAnchorIfSamePage(e, child.href, page.url.pathname);
+													closeSubmenu();
+												}}
+												class="text-ink-soft hover:bg-paper-deep hover:text-clay block px-5 py-2.5
+												text-[0.9375rem] transition-colors"
+											>
+												{child.label}
+											</a>
+										</li>
+									{/each}
+								</ul>
+							{/if}
+						</li>
+					{/each}
+				</ul>
+			</nav>
+
+			<div class="flex items-center gap-2">
+				<LanguageSwitcher />
+
+				<a
+					href="/contato"
+					class="bg-ink text-paper hover:bg-clay hidden min-h-11 items-center px-6 py-3
+					text-[0.875rem] font-medium transition-colors duration-300 lg:inline-flex"
+				>
+					Vamos conversar
+				</a>
+
+				<button
+					type="button"
+					onclick={() => (menuOpen = true)}
+					aria-expanded={menuOpen}
+					aria-haspopup="dialog"
+					class="text-ink hover:text-clay -mr-2 inline-flex size-11 items-center
 					justify-center transition-colors lg:hidden"
-			>
-				<Menu class="size-6" aria-hidden="true" />
-				<span class="sr-only">Abrir menu</span>
-			</button>
-		</div>
+				>
+					<Menu class="size-6" aria-hidden="true" />
+					<span class="sr-only">Abrir menu</span>
+				</button>
+			</div>
+		{/if}
 	</div>
 </header>
 
-<MobileMenu open={menuOpen} onclose={() => (menuOpen = false)} />
+{#if !minimal}
+	<MobileMenu open={menuOpen} onclose={() => (menuOpen = false)} />
+{/if}
 
 <!-- Fecha o submenu com Escape -->
 <svelte:window

@@ -7,10 +7,13 @@
 		onreveal?: () => void;
 		/** Disparado quando a abertura termina (ou é pulada/não executada). */
 		oncomplete?: () => void;
+		/**
+		 * Chave do localStorage que marca a abertura como já vista. Cada contexto
+		 * (home, proposta hetero, etc.) usa a sua para animar de forma independente.
+		 */
+		storageKey?: string;
 	};
-	let { onreveal, oncomplete }: Props = $props();
-
-	const STORAGE_KEY = 'natasha-intro-seen';
+	let { onreveal, oncomplete, storageKey = 'natasha-intro-seen' }: Props = $props();
 	const SVG_URL = '/brand/natasha-cohn-animated.svg';
 	const MANDALA_URL = '/brand/mandala.png';
 	const SLOGAN_URL = '/brand/natasha-cohn-slogan.svg';
@@ -68,7 +71,7 @@
 		}
 		unlockScroll();
 		try {
-			localStorage.setItem(STORAGE_KEY, '1');
+			localStorage.setItem(storageKey, '1');
 		} catch {
 			/* localStorage indisponível — segue sem persistir */
 		}
@@ -135,7 +138,7 @@
 		// Checagens só no navegador (SSR-safe).
 		let seen = false;
 		try {
-			seen = localStorage.getItem(STORAGE_KEY) === '1';
+			seen = localStorage.getItem(storageKey) === '1';
 		} catch {
 			/* trata como primeira visita */
 		}
@@ -146,7 +149,7 @@
 
 		if (import.meta.env.DEV) {
 			// eslint-disable-next-line no-console
-			console.info('[intro] para rever a abertura: localStorage.removeItem("natasha-intro-seen")');
+			console.info(`[intro] para rever a abertura: localStorage.removeItem("${storageKey}")`);
 		}
 
 		const reduce =
