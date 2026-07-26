@@ -1,0 +1,276 @@
+/* ------------------------------------------------------------------ *
+ * Celebrante Natasha Cohn — folha de estilo raiz
+ * Fontes auto-hospedadas (sem requisições externas → compatível com CSP)
+ * ------------------------------------------------------------------ */
+@import '@fontsource-variable/fraunces/standard.css';
+@import '@fontsource-variable/fraunces/standard-italic.css';
+@import '@fontsource-variable/inter/wght.css';
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* ------------------------------------------------------------------ *
+ * DESIGN TOKENS
+ * Todos disponíveis como utilitários Tailwind e como CSS custom
+ * properties (:root) para uso em GSAP e CSS puro.
+ * Paleta provisória — reconciliar com o logotipo oficial (ver
+ * docs/BRAND_AUDIT.md). Mantém o caráter quente e editorial da marca.
+ * ------------------------------------------------------------------ */
+@theme {
+	/* Cores — papel / superfícies */
+	--color-paper: #f4eee4;
+	--color-paper-deep: #ece2d2;
+	--color-surface: #fbf8f1;
+	--color-night: #221f1b;
+	--color-night-soft: #2e2a24;
+
+	/* Cores — tinta / texto */
+	--color-ink: #23201c;
+	--color-ink-soft: #6a5f54;
+	--color-ink-mute: #8c8073;
+
+	/* Cores — marca (extraídas do logotipo oficial — ver docs/BRAND_AUDIT.md) */
+	--color-clay: #a85a28; /* terracota/cobre — primária (símbolo + wordmark) */
+	--color-clay-deep: #8a4820;
+	--color-clay-soft: #dc965a; /* cobre claro — realce */
+	--color-teal: #4f9e9e; /* turquesa — secundária (corações + slogan) */
+	--color-teal-deep: #3d7f7f;
+	--color-blush: #e7d2b7; /* creme das pétalas — pseudo-elementos */
+	--color-brass: #b0894f; /* latão — acento, uso comedido */
+
+	/* Cores — estrutura */
+	--color-border: #ded1bf;
+	--color-border-soft: #e8dfd0;
+
+	/* Tipografia */
+	--font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+	--font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-accent: 'Fraunces Variable', Georgia, serif;
+
+	/* Escala tipográfica fluida (clamp) */
+	--text-eyebrow: 0.8125rem;
+	--text-eyebrow--line-height: 1.4;
+	--text-eyebrow--letter-spacing: 0.18em;
+
+	--text-lead: clamp(1.125rem, 1.04rem + 0.42vw, 1.375rem);
+	--text-lead--line-height: 1.65;
+
+	--text-h4: clamp(1.2rem, 1.08rem + 0.6vw, 1.5rem);
+	--text-h4--line-height: 1.3;
+
+	--text-h3: clamp(1.45rem, 1.15rem + 1.4vw, 2.1rem);
+	--text-h3--line-height: 1.2;
+
+	--text-h2: clamp(1.9rem, 1.35rem + 2.6vw, 3.1rem);
+	--text-h2--line-height: 1.12;
+
+	--text-h1: clamp(2.3rem, 1.5rem + 3.9vw, 4.4rem);
+	--text-h1--line-height: 1.05;
+
+	--text-display: clamp(2.9rem, 1.4rem + 6.4vw, 6.25rem);
+	--text-display--line-height: 0.98;
+
+	/* Larguras / layout */
+	--width-container: 78rem;
+	--width-prose: 42rem;
+	--header-height: 5rem;
+
+	/* Raios (comedidos — nada de cards excessivamente arredondados) */
+	--radius-xs: 2px;
+	--radius-sm: 3px;
+	--radius-md: 6px;
+	--radius-lg: 10px;
+
+	/* Sombras (suaves, quentes) */
+	--shadow-soft: 0 1px 2px rgba(35, 32, 28, 0.04), 0 6px 20px rgba(35, 32, 28, 0.06);
+	--shadow-lift: 0 4px 10px rgba(35, 32, 28, 0.08), 0 18px 44px rgba(35, 32, 28, 0.1);
+	--shadow-portrait: 0 30px 70px -30px rgba(35, 32, 28, 0.4);
+
+	/* Easing / durações (consumidos por GSAP e transições CSS) */
+	--ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+	--ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+	--duration-fast: 200ms;
+	--duration-base: 400ms;
+	--duration-slow: 800ms;
+
+	/* z-index */
+	--z-header: 50;
+	--z-overlay: 60;
+	--z-modal: 70;
+
+	/*
+	 * Gradiente de inclusão (arco-íris suave) — assinatura de que a Natasha
+	 * celebra todas as formas de amor. Tons levemente dessaturados para
+	 * conversar com a paleta editorial (o vermelho encosta no cobre e o azul
+	 * na turquesa da marca). Usado na faixa fina do topo e no rodapé.
+	 */
+	--gradient-pride: linear-gradient(
+		90deg,
+		#d97a6a 0%,
+		#e2a15f 20%,
+		#e6cf82 40%,
+		#7fb98c 60%,
+		#5fa8c0 80%,
+		#9784c6 100%
+	);
+}
+
+/* ------------------------------------------------------------------ *
+ * BASE
+ * ------------------------------------------------------------------ */
+@layer base {
+	*,
+	*::before,
+	*::after {
+		border-color: var(--color-border);
+	}
+
+	html {
+		-webkit-text-size-adjust: 100%;
+		/*
+		 * Compensa o cabeçalho fixo ao pular para âncoras (#casamentos etc.),
+		 * mais uma folga de respiro. É a ÚNICA fonte desse offset — as seções
+		 * NÃO devem repetir com `scroll-mt-*`, senão o deslocamento dobra.
+		 */
+		scroll-padding-top: calc(var(--header-height) + 1.5rem);
+		text-rendering: optimizeLegibility;
+	}
+
+	/*
+	 * NÃO usamos `scroll-behavior: smooth` no <html>: ele quebra o reset de
+	 * rolagem do roteador do SvelteKit ao trocar de página (a nova página
+	 * mantinha a rolagem antiga). A rolagem suave onde queremos (ex.: clicar
+	 * em "Início" já na home) é feita via JS com window.scrollTo({behavior}),
+	 * que respeita prefers-reduced-motion e não interfere na navegação.
+	 */
+
+	body {
+		background-color: var(--color-paper);
+		color: var(--color-ink);
+		font-family: var(--font-body);
+		font-size: 1.0625rem;
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		/* Nunca permitir rolagem horizontal */
+		overflow-x: clip;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-display);
+		font-weight: 480;
+		font-optical-sizing: auto;
+		color: var(--color-ink);
+		text-wrap: balance;
+	}
+
+	p {
+		text-wrap: pretty;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-clay);
+		outline-offset: 3px;
+		border-radius: var(--radius-xs);
+	}
+
+	::selection {
+		background-color: var(--color-clay);
+		color: var(--color-paper);
+	}
+
+	img,
+	picture,
+	video {
+		max-width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	/* Respeita a preferência do usuário por menos movimento */
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.001ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.001ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * PROGRESSIVE ENHANCEMENT
+ * Nenhum elemento é escondido por CSS à espera do GSAP. A action
+ * `reveal` aplica o estado inicial de forma síncrona via style inline
+ * (evitando piscada) e sempre restaura a visibilidade caso o GSAP não
+ * carregue. Sem JavaScript, todo o conteúdo permanece visível.
+ * ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ *
+ * UTILITÁRIOS EDITORIAIS
+ * ------------------------------------------------------------------ */
+@utility container-editorial {
+	width: 100%;
+	max-width: var(--width-container);
+	margin-inline: auto;
+	padding-inline: clamp(1.25rem, 0.6rem + 3vw, 4rem);
+}
+
+@utility prose-measure {
+	max-width: var(--width-prose);
+}
+
+/* Fonte de destaque em itálico — usada para frases manuscritas/poéticas */
+@utility font-accent-italic {
+	font-family: var(--font-accent);
+	font-style: italic;
+	font-optical-sizing: auto;
+}
+
+/* Sublinhado editorial animado (usa ::after, sem elementos vazios) */
+@utility link-underline {
+	position: relative;
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -0.15em;
+		width: 100%;
+		height: 1px;
+		background-color: currentColor;
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform var(--duration-base) var(--ease-editorial);
+	}
+	&:hover::after,
+	&:focus-visible::after {
+		transform: scaleX(1);
+		transform-origin: left;
+	}
+}
+
+/* Eyebrow/kicker editorial */
+@utility eyebrow {
+	font-family: var(--font-body);
+	font-size: var(--text-eyebrow);
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	font-weight: 500;
+	color: var(--color-clay);
+}

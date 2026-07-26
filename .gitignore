@@ -1,0 +1,29 @@
+node_modules
+
+# Output
+.output
+.vercel
+.svelte-kit
+build
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Testing
+/test-results/
+/playwright-report/
+/playwright/.cache/
+coverage
+
+# Logs
+*.log
+npm-debug.log*
