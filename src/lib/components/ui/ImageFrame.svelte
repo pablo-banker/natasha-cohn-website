@@ -33,7 +33,7 @@
 
 <figure
 	class="bg-paper-deep relative overflow-hidden {ratio} {className}"
-	use:maskReveal={animate ? undefined : { duration: 0 }}
+	use:maskReveal={priority ? { disabled: true } : animate ? undefined : { duration: 0 }}
 >
 	{#if src}
 		<img

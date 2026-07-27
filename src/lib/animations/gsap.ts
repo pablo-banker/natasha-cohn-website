@@ -14,6 +14,12 @@ export type GsapBundle = {
 
 let bundle: Promise<GsapBundle> | null = null;
 
+/** O GSAP já foi solicitado? Permite pular trabalho (ex.: refresh do
+ *  ScrollTrigger em cada navegação) sem forçar o carregamento do chunk. */
+export function isGsapLoaded(): boolean {
+	return bundle !== null;
+}
+
 export function loadGsap(): Promise<GsapBundle> {
 	if (!bundle) {
 		bundle = Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
