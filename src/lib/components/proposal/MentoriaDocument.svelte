@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Check, X } from '@lucide/svelte';
-	import type { MentoriaContent } from '$lib/content/mentoria';
+	import type { MentoriaContent, MentoriaBudget } from '$lib/content/mentoria';
 	import { site } from '$lib/content/site';
 	import { socialLinks } from '$lib/content/social';
 	import SectionIntro from '$lib/components/ui/SectionIntro.svelte';
@@ -12,7 +12,7 @@
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
 
-	let { content }: { content: MentoriaContent } = $props();
+	let { content, budget }: { content: MentoriaContent; budget: MentoriaBudget } = $props();
 
 	const whatsappMessage = 'Olá, Natasha! Tenho interesse na mentoria para celebrar uma cerimônia.';
 </script>
@@ -162,10 +162,15 @@
 	<div class="container-editorial mx-auto max-w-2xl text-center">
 		<p class="eyebrow text-ink-mute" use:reveal={{ y: 12, duration: 0.6 }}>Investimento</p>
 		<div class="border-border bg-paper mt-6 border p-10" use:reveal={{ y: 24 }}>
-			<p class="font-display text-h1 text-clay">{content.budget.value}</p>
-			<p class="text-ink-soft mx-auto mt-6 max-w-md">{content.budget.payment}</p>
+			<p class="font-display text-h1 text-clay">{budget.value}</p>
+			<p class="text-ink-soft mx-auto mt-6 max-w-md">{budget.payment}</p>
+			{#if budget.notes}
+				<p class="text-ink-mute mx-auto mt-4 max-w-md text-sm whitespace-pre-line">
+					{budget.notes}
+				</p>
+			{/if}
 		</div>
-		<p class="text-ink-mute mt-6 text-sm">{content.budget.validity}</p>
+		<p class="text-ink-mute mt-6 text-sm">{budget.validity}</p>
 		<div class="mt-10 flex justify-center">
 			<WhatsAppCTA variant="inline" message={whatsappMessage} label="Quero fazer a mentoria" />
 		</div>

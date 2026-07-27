@@ -11,6 +11,15 @@ export type MentoriaIncludedItem = {
 	bullets?: string[];
 };
 
+export type MentoriaBudget = {
+	title: string;
+	value: string;
+	payment: string;
+	validity: string;
+	/** Observação opcional (vem da planilha). Só aparece se preenchida. */
+	notes?: string;
+};
+
 export type MentoriaContent = {
 	cover: {
 		kicker: string;
@@ -38,12 +47,7 @@ export type MentoriaContent = {
 		title: string;
 		items: string[];
 	};
-	budget: {
-		title: string;
-		value: string;
-		payment: string;
-		validity: string;
-	};
+	budget: MentoriaBudget;
 	cta: {
 		title: string;
 		lead: string;

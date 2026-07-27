@@ -40,5 +40,5 @@
 <BrandIntro storageKey="natasha-intro-prop-mentoria-seen" onreveal={handleReveal} />
 
 <div bind:this={contentEl}>
-	<MentoriaDocument content={mentoriaProposal} />
+	<MentoriaDocument content={mentoriaProposal} budget={data.budget} />
 </div>
