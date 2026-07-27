@@ -22,14 +22,15 @@
 	const GUIDE_IDS = ['path4', 'path5', 'path6'] as const;
 
 	// Durações (s) — ajustáveis. Total ≈ 3.7s (logo → assinatura → slogan).
-	const D_MANDALA = 0.5;
-	const NAME_START = 0.3; // a assinatura começa enquanto a mandala assenta
-	const D_NATASHA = 1.15;
-	const D_TCUT = 0.16;
-	const D_COHN = 0.9;
-	const D_SLOGAN = 0.4;
-	const D_PAUSE = 0.2;
-	const D_FADE = 0.6;
+	// Abertura enxuta (~2,3s no total) — encanta sem atrasar o conteúdo.
+	const D_MANDALA = 0.4;
+	const NAME_START = 0.2; // a assinatura começa enquanto a mandala assenta
+	const D_NATASHA = 0.65;
+	const D_TCUT = 0.1;
+	const D_COHN = 0.5;
+	const D_SLOGAN = 0.3;
+	const D_PAUSE = 0.1;
+	const D_FADE = 0.5;
 
 	let isIntroVisible = $state(false);
 	let svgMarkup = $state('');
@@ -158,15 +159,20 @@
 		isIntroVisible = true;
 		lockScroll();
 		// Rede de segurança: a home nunca fica presa.
-		safety = setTimeout(finish, 9000);
+		safety = setTimeout(finish, 5000);
 
 		(async () => {
 			try {
-				svgMarkup = await fetch(SVG_URL).then((r) => r.text());
+				// SVG e GSAP carregam em paralelo (antes eram em série).
+				const [svg, gsapBundle] = await Promise.all([
+					fetch(SVG_URL).then((r) => r.text()),
+					loadGsap()
+				]);
+				svgMarkup = svg;
 				await tick();
 				if (finished || !root) return;
 
-				const { gsap } = await loadGsap();
+				const { gsap } = gsapBundle;
 				ctx = gsap.context(() => {
 					const paths = buildReveal();
 					// A assinatura (mascarada) só fica visível depois que a máscara é
