@@ -15,12 +15,34 @@
 	const jsonLd = $derived(
 		seo.structuredData ? JSON.stringify(seo.structuredData).replace(/</g, '\\u003c') : null
 	);
+
+	// Tipo MIME da imagem de preload (deixa o browser ignorar formatos que não
+	// suporta, sem baixar à toa).
+	const preloadType = $derived(
+		seo.preloadImage?.endsWith('.avif')
+			? 'image/avif'
+			: seo.preloadImage?.endsWith('.webp')
+				? 'image/webp'
+				: seo.preloadImage?.match(/\.jpe?g$/)
+					? 'image/jpeg'
+					: undefined
+	);
 </script>
 
 <svelte:head>
 	<title>{fullTitle}</title>
 	<meta name="description" content={seo.description} />
 	<link rel="canonical" href={canonical} />
+
+	{#if seo.preloadImage}
+		<link
+			rel="preload"
+			as="image"
+			href={seo.preloadImage}
+			type={preloadType}
+			fetchpriority="high"
+		/>
+	{/if}
 
 	{#if seo.noindex}
 		<meta name="robots" content="noindex, nofollow" />

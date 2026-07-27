@@ -32,6 +32,7 @@
 		title: 'Proposta de cerimônia',
 		description: 'Proposta de cerimônia autoral feita por Natasha Cohn.',
 		path: `/proposta-realizar/${data.id}`,
+		preloadImage: heteroProposal.images.hero ?? undefined,
 		noindex: true
 	}}
 />

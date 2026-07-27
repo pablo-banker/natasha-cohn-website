@@ -12,6 +12,9 @@ export type SeoInput = {
 	/** Caminho canônico relativo, ex.: "/cerimonias" */
 	path: string;
 	image?: SeoImage;
+	/** Caminho da imagem LCP da rota (retrato/capa) para dar `preload` no
+	 *  <head> — o browser a descobre antes de parsear o corpo. */
+	preloadImage?: string;
 	/** article para posts do blog, website para o resto */
 	type?: 'website' | 'article' | 'profile';
 	/** Impede indexação (ex.: páginas de erro) */

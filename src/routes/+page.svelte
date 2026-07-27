@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Seo from '$lib/seo/Seo.svelte';
 	import { site } from '$lib/content/site';
+	import { hero } from '$lib/content/home';
 	import { personSchema, professionalServiceSchema, webSiteSchema } from '$lib/seo/structuredData';
 	import { loadGsap } from '$lib/animations/gsap';
 	import { prefersReducedMotion } from '$lib/utils/motion';
@@ -44,6 +45,7 @@
 		title: 'Celebrante de casamentos',
 		description: site.description,
 		path: '/',
+		preloadImage: hero.portrait,
 		structuredData: [webSiteSchema(), personSchema(), professionalServiceSchema()]
 	}}
 />
