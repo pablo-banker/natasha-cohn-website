@@ -8,6 +8,8 @@
 	import Quote from '$lib/components/ui/Quote.svelte';
 	import WhatsAppCTA from '$lib/components/contact/WhatsAppCTA.svelte';
 	import SocialIcon from '$lib/components/ui/SocialIcon.svelte';
+	import BrandMandala from '$lib/components/motion/BrandMandala.svelte';
+	import ScrollGlow from '$lib/components/motion/ScrollGlow.svelte';
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
 
@@ -20,7 +22,10 @@
 </script>
 
 <!-- ░░ Capa ░░ -->
-<section class="relative overflow-hidden pt-28 pb-20 lg:pt-36 lg:pb-28">
+<section class="relative isolate overflow-hidden pt-28 pb-20 lg:pt-36 lg:pb-28">
+	<!-- Toque sutil da marca na abertura da proposta. -->
+	<BrandMandala class="-top-28 -right-28" size="26rem" opacity={0.05} rotate={12} fade={false} />
+
 	<div class="container-editorial">
 		<div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
 			<div use:reveal={{ x: -24 }}>
@@ -126,7 +131,7 @@
 </section>
 
 <!-- ░░ Convidados envolvidos (mosaico) ░░ -->
-<section class="bg-night py-4">
+<section class="bg-night overflow-hidden py-4">
 	<div class="grid grid-cols-2 gap-1 lg:grid-cols-3">
 		{#each Array(9) as _, i (i)}
 			{#if i === 4}
@@ -309,7 +314,14 @@
 </section>
 
 <!-- ░░ CTA final ░░ -->
-<section class="bg-night text-paper py-24 lg:py-32">
+<section class="bg-night text-paper relative isolate overflow-hidden py-24 lg:py-32">
+	<!-- Halo quente atravessando o fundo escuro do fechamento. -->
+	<ScrollGlow
+		class="top-1/2 left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2"
+		color="rgba(220,150,90,0.16)"
+		drift={110}
+	/>
+
 	<div class="container-editorial text-center">
 		<h2 class="text-h2 font-display text-paper" use:revealLines={{ onScroll: true }}>
 			{content.cta.title}

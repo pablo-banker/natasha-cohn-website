@@ -7,6 +7,8 @@
 	import ImageFrame from '$lib/components/ui/ImageFrame.svelte';
 	import WhatsAppCTA from '$lib/components/contact/WhatsAppCTA.svelte';
 	import SocialIcon from '$lib/components/ui/SocialIcon.svelte';
+	import BrandMandala from '$lib/components/motion/BrandMandala.svelte';
+	import ScrollGlow from '$lib/components/motion/ScrollGlow.svelte';
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
 
@@ -91,7 +93,10 @@
 </section>
 
 <!-- ░░ O que está incluso ░░ -->
-<section class="bg-surface py-20 lg:py-28">
+<section class="bg-surface relative isolate overflow-hidden py-20 lg:py-28">
+	<!-- Mandala discreta da marca no canto. -->
+	<BrandMandala class="-right-32 -bottom-32" size="28rem" opacity={0.05} rotate={14} />
+
 	<div class="container-editorial">
 		<div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
 			<div class="flex flex-col gap-4 lg:col-span-5">
@@ -168,7 +173,14 @@
 </section>
 
 <!-- ░░ CTA final ░░ -->
-<section class="bg-night text-paper py-24 lg:py-32">
+<section class="bg-night text-paper relative isolate overflow-hidden py-24 lg:py-32">
+	<!-- Halo quente atravessando o fundo escuro do fechamento. -->
+	<ScrollGlow
+		class="top-1/2 left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2"
+		color="rgba(220,150,90,0.16)"
+		drift={110}
+	/>
+
 	<div class="container-editorial text-center">
 		<h2 class="text-h2 font-display text-paper" use:revealLines={{ onScroll: true }}>
 			{content.cta.title}

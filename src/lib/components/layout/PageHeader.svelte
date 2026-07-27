@@ -2,6 +2,8 @@
 	import { ChevronRight } from '@lucide/svelte';
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
+	import BrandMandala from '$lib/components/motion/BrandMandala.svelte';
+	import ScrollGlow from '$lib/components/motion/ScrollGlow.svelte';
 
 	type Props = {
 		eyebrow?: string;
@@ -14,7 +16,18 @@
 	let { eyebrow, title, lead, breadcrumbs = [] }: Props = $props();
 </script>
 
-<header class="border-border relative overflow-hidden border-b pt-32 pb-16 lg:pt-40 lg:pb-24">
+<header
+	class="border-border relative isolate overflow-hidden border-b pt-32 pb-16 lg:pt-40 lg:pb-24"
+>
+	<!-- Mesma linguagem da home, em tom mais leve: halo quente + mandala cortada
+		 no canto (visível no load, sem fade). Decorativo, atrás do conteúdo. -->
+	<ScrollGlow
+		class="-top-40 -left-40 h-[34rem] w-[34rem]"
+		color="rgba(220,150,90,0.11)"
+		drift={90}
+	/>
+	<BrandMandala class="-top-24 -right-24" size="24rem" opacity={0.05} rotate={12} fade={false} />
+
 	<div class="container-editorial">
 		{#if breadcrumbs.length > 0}
 			<nav aria-label="Trilha de navegação" class="mb-8" use:reveal={{ y: 10, duration: 0.5 }}>

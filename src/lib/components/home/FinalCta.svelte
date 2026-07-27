@@ -4,9 +4,17 @@
 	import WhatsAppCTA from '$lib/components/contact/WhatsAppCTA.svelte';
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
+	import ScrollGlow from '$lib/components/motion/ScrollGlow.svelte';
 </script>
 
-<section class="relative overflow-hidden py-24 lg:py-32" aria-labelledby="final-cta-title">
+<section class="relative isolate overflow-hidden py-24 lg:py-32" aria-labelledby="final-cta-title">
+	<!-- Halo quente que atravessa e moldura o painel do CTA final. -->
+	<ScrollGlow
+		class="top-1/2 left-1/2 h-[46rem] w-[46rem] -translate-x-1/2 -translate-y-1/2"
+		color="rgba(220,150,90,0.13)"
+		drift={120}
+	/>
+
 	<div class="container-editorial">
 		<div class="cta-panel relative mx-auto max-w-4xl px-6 py-16 text-center sm:px-12 lg:py-20">
 			<p class="eyebrow" use:reveal={{ y: 12, duration: 0.6 }}>{finalCta.eyebrow}</p>

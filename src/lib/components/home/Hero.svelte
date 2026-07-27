@@ -4,6 +4,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Stats from '$lib/components/ui/Stats.svelte';
 	import PortraitFrame from './PortraitFrame.svelte';
+	import HeroBackground from '$lib/components/motion/HeroBackground.svelte';
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
 </script>
@@ -14,9 +15,11 @@
 	Tudo é renderizado no servidor e permanece visível sem JavaScript.
 -->
 <section
-	class="relative overflow-hidden pt-28 pb-16 lg:pt-32 lg:pb-24"
+	class="relative isolate overflow-hidden pt-28 pb-16 lg:pt-32 lg:pb-24"
 	aria-labelledby="hero-title"
 >
+	<HeroBackground />
+
 	<div class="container-editorial">
 		<div class="grid items-center gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16">
 			<!-- Coluna de texto (primeira no DOM → primeira no mobile) -->

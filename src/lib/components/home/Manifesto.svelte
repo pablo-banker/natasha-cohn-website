@@ -4,13 +4,17 @@
 	import { reveal } from '$lib/animations/reveal';
 	import { revealLines } from '$lib/animations/text';
 	import { parallax } from '$lib/animations/parallax';
+	import BrandMandala from '$lib/components/motion/BrandMandala.svelte';
 </script>
 
 <!--
 	Manifesto: composição assimétrica, muito espaço em branco, uma
 	fotografia documental e uma frase de destaque em itálico.
 -->
-<section class="relative py-24 lg:py-36" aria-labelledby="manifesto-title">
+<section class="relative isolate overflow-hidden py-24 lg:py-36" aria-labelledby="manifesto-title">
+	<!-- Mandala de transição, discreta no canto inferior esquerdo. -->
+	<BrandMandala class="-bottom-32 -left-32" size="26rem" opacity={0.06} rotate={12} />
+
 	<div class="container-editorial">
 		<div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
 			<div class="lg:col-span-7 lg:col-start-1">
