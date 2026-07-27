@@ -112,6 +112,8 @@
 				height="256"
 				class="h-auto w-full"
 				decoding="async"
+				loading="lazy"
+				fetchpriority="low"
 			/>
 		</div>
 	</div>
