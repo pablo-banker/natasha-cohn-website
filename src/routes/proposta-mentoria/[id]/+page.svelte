@@ -31,6 +31,7 @@
 		title: 'Mentoria — celebre com o coração',
 		description: 'Mentoria de Natasha Cohn para preparar quem vai celebrar uma cerimônia.',
 		path: `/proposta-mentoria/${data.id}`,
+		preloadImage: mentoriaProposal.cover.image ?? undefined,
 		noindex: true
 	}}
 />

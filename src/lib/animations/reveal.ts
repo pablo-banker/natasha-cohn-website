@@ -1,5 +1,4 @@
 import type { Action } from 'svelte/action';
-import { loadGsap } from './gsap';
 import { prefersReducedMotion } from '$lib/utils/motion';
 
 export type RevealParams = {
@@ -15,98 +14,98 @@ export type RevealParams = {
 	stagger?: string;
 	/** Intervalo entre os filhos, em segundos. */
 	staggerAmount?: number;
-	/** Posição de disparo do ScrollTrigger. */
+	/** Posição de disparo, no formato do GSAP (ex.: 'top 85%', 'top bottom'). */
 	start?: string;
 };
 
+/** Curva equivalente ao `power3.out` do GSAP. */
+const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
 /**
- * Revela um elemento (ou seus filhos, em cascata) quando entra na viewport.
+ * Converte o `start` do GSAP em `rootMargin` do IntersectionObserver.
+ * 'top 85%' → dispara com ~15% do elemento à vista → margem inferior -15%.
+ * 'top bottom' (ou não numérico) → dispara assim que entra → margem 0.
+ */
+function rootMarginFromStart(start: string): string {
+	const match = /top\s+(\d+)%/.exec(start);
+	return match ? `0px 0px -${100 - Number(match[1])}% 0px` : '0px 0px 0px 0px';
+}
+
+/**
+ * Revela um elemento (ou seus filhos, em cascata) ao entrar na viewport —
+ * com IntersectionObserver + transição CSS, SEM depender do GSAP. Assim o
+ * conteúdo aparece assim que a página hidrata (não espera o chunk do GSAP
+ * baixar) e o site fica com muito menos ScrollTriggers.
  *
- * Progressive enhancement: o estado inicial oculto é aplicado de forma
- * SÍNCRONA via style inline — evitando qualquer piscada — e há um fallback
- * que torna o elemento visível caso o GSAP não carregue. Se o JavaScript
- * falhar por completo, a action nunca roda e o conteúdo permanece visível.
- * Com prefers-reduced-motion, nada é escondido nem animado.
+ * Progressive enhancement: sem JavaScript a action nunca roda e o conteúdo
+ * renderizado no servidor permanece visível. Com prefers-reduced-motion,
+ * nada é escondido nem animado.
  */
 export const reveal: Action<HTMLElement, RevealParams | undefined> = (node, params) => {
-	const opts: Required<Omit<RevealParams, 'stagger'>> & { stagger?: string } = {
-		y: params?.y ?? 24,
-		x: params?.x ?? 0,
-		scale: params?.scale ?? 1,
-		duration: params?.duration ?? 0.9,
-		delay: params?.delay ?? 0,
-		staggerAmount: params?.staggerAmount ?? 0.09,
-		start: params?.start ?? 'top 85%',
-		stagger: params?.stagger
-	};
+	const y = params?.y ?? 24;
+	const x = params?.x ?? 0;
+	const scale = params?.scale ?? 1;
+	const duration = params?.duration ?? 0.9;
+	const delay = params?.delay ?? 0;
+	const staggerAmount = params?.staggerAmount ?? 0.09;
+	const stagger = params?.stagger;
+	const start = params?.start ?? 'top 85%';
 
 	// Usuário pediu menos movimento: não escondemos nem animamos nada.
 	if (prefersReducedMotion()) return {};
 
-	const targets: HTMLElement[] = opts.stagger
-		? Array.from(node.querySelectorAll<HTMLElement>(opts.stagger))
+	const targets: HTMLElement[] = stagger
+		? Array.from(node.querySelectorAll<HTMLElement>(stagger))
 		: [node];
-
 	if (targets.length === 0) return {};
 
-	// Estado inicial síncrono — sem piscada entre a hidratação e o GSAP.
-	for (const el of targets) {
-		el.style.opacity = '0';
-		el.style.willChange = 'transform, opacity';
-	}
+	// Sem IntersectionObserver (navegadores muito antigos): deixa visível.
+	if (typeof IntersectionObserver === 'undefined') return {};
 
-	// Rede de segurança: se o GSAP não carregar, o conteúdo aparece assim mesmo.
-	const fallback = setTimeout(() => {
+	const hidden = `translate(${x}px, ${y}px) scale(${scale})`;
+
+	// Estado inicial oculto — aplicado de forma síncrona, sem piscada.
+	const setHidden = () => {
+		targets.forEach((el, i) => {
+			const d = delay + (stagger ? i * staggerAmount : 0);
+			el.style.opacity = '0';
+			el.style.transform = hidden;
+			el.style.transition = `opacity ${duration}s ${EASE} ${d}s, transform ${duration}s ${EASE} ${d}s`;
+		});
+	};
+	const show = () => {
+		for (const el of targets) {
+			el.style.opacity = '1';
+			el.style.transform = 'none';
+		}
+	};
+	const clear = () => {
 		for (const el of targets) {
 			el.style.opacity = '';
-			el.style.willChange = '';
+			el.style.transform = '';
+			el.style.transition = '';
 		}
-	}, 2500);
+	};
 
-	let cleanup: (() => void) | undefined;
-	let cancelled = false;
+	setHidden();
 
-	loadGsap()
-		.then(({ gsap }) => {
-			if (cancelled) return;
-			clearTimeout(fallback);
-
-			const ctx = gsap.context(() => {
-				gsap.set(targets, { opacity: 0, y: opts.y, x: opts.x, scale: opts.scale });
-				gsap.to(targets, {
-					opacity: 1,
-					y: 0,
-					x: 0,
-					scale: 1,
-					duration: opts.duration,
-					delay: opts.delay,
-					ease: 'power3.out',
-					stagger: opts.stagger ? opts.staggerAmount : 0,
-					scrollTrigger: {
-						trigger: node,
-						start: opts.start,
-						// Regride ao rolar de volta para cima e refaz ao descer.
-						toggleActions: 'play none none reverse'
-					}
-				});
-			}, node);
-
-			cleanup = () => ctx.revert();
-		})
-		.catch(() => {
-			// Falha ao carregar o GSAP: garante a visibilidade do conteúdo.
-			clearTimeout(fallback);
-			for (const el of targets) {
-				el.style.opacity = '';
-				el.style.willChange = '';
+	// Revela UMA vez e para de observar — o conteúdo já visto permanece
+	// visível (não reesconde ao rolar por cima). Menos trabalho e sem jank.
+	const io = new IntersectionObserver(
+		(entries) => {
+			if (entries.some((e) => e.isIntersecting)) {
+				show();
+				io.disconnect();
 			}
-		});
+		},
+		{ rootMargin: rootMarginFromStart(start) }
+	);
+	io.observe(node);
 
 	return {
 		destroy() {
-			cancelled = true;
-			clearTimeout(fallback);
-			cleanup?.();
+			io.disconnect();
+			clear();
 		}
 	};
 };

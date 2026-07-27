@@ -31,6 +31,7 @@
 		title: 'Proposta de cerimônia',
 		description: 'Proposta de cerimônia autoral feita por Natasha Cohn.',
 		path: `/proposta-sonhar/${data.id}`,
+		preloadImage: sonharProposal.images.hero ?? undefined,
 		noindex: true
 	}}
 />

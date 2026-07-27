@@ -54,5 +54,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		response.headers.set(header, value);
 	}
 
+	// Links-fantasma de proposta: reforça o noindex também no header (a meta
+	// tag SSR já cobre; isto é defesa em profundidade contra indexação/cache).
+	if (pathname.startsWith('/proposta-')) {
+		response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+	}
+
 	return response;
 };

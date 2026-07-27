@@ -100,11 +100,13 @@ export const countUp: Action<HTMLElement, CountUpParams> = (node, params) => {
  * Revela uma imagem por máscara (clip-path), de baixo para cima.
  * Usa apenas clip-path + transform — sem layout shift.
  */
-export const maskReveal: Action<HTMLElement, { duration?: number; delay?: number } | undefined> = (
-	node,
-	params
-) => {
-	if (prefersReducedMotion()) return {};
+export const maskReveal: Action<
+	HTMLElement,
+	{ duration?: number; delay?: number; disabled?: boolean } | undefined
+> = (node, params) => {
+	// Imagens `priority` (LCP, acima da dobra) NÃO são escondidas atrás do
+	// GSAP: pintam de imediato. Esconder aqui atrasaria o LCP e causaria flash.
+	if (params?.disabled || prefersReducedMotion()) return {};
 
 	let cancelled = false;
 	let cleanup: (() => void) | undefined;

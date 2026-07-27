@@ -30,10 +30,13 @@
 		});
 	});
 
-	// Recalcula as posições do ScrollTrigger depois que a nova página monta.
+	// Recalcula as posições do ScrollTrigger depois que a nova página monta —
+	// mas só se o GSAP já estiver carregado. Não vale puxar o chunk (nem forçar
+	// um reflow) numa rota sem animações; a própria página o carrega se precisar.
 	afterNavigate(async () => {
-		const mod = await import('$lib/animations/gsap');
-		const { ScrollTrigger } = await mod.loadGsap();
+		const { isGsapLoaded, loadGsap } = await import('$lib/animations/gsap');
+		if (!isGsapLoaded()) return;
+		const { ScrollTrigger } = await loadGsap();
 		ScrollTrigger.refresh();
 	});
 </script>

@@ -31,6 +31,7 @@
 		title: 'Proposta de cerimônia',
 		description: 'Proposta de cerimônia autoral feita por Natasha Cohn.',
 		path: `/proposta-amar/${data.id}`,
+		preloadImage: amarProposal.images.hero ?? undefined,
 		noindex: true
 	}}
 />

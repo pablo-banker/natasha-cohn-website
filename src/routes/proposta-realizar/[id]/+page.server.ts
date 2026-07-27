@@ -7,11 +7,14 @@ import { fetchProposalBudget } from '$lib/server/proposalSheet';
 // A busca é server-side (a URL do Apps Script fica em env, fora do front-end).
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: PageServerLoad = async ({ params, fetch, setHeaders }) => {
 	const sheet = await fetchProposalBudget(fetch, params.id);
 	// Sem dados do casal (ID inexistente ou falha na busca) → 404. Nunca
 	// mostramos uma proposta com placeholder no lugar de dados reais.
 	if (!sheet) error(404, 'Proposta não encontrada');
+	// Dados por-id, quase imutáveis no curto prazo: cache de borda + SWR reduz
+	// o TTFB (que dependia do fetch ao Apps Script). O 404 acima não é cacheado.
+	setHeaders({ 'cache-control': 's-maxage=300, stale-while-revalidate=3600' });
 	return {
 		id: params.id,
 		// A planilha sobrescreve os campos que fornece; título/validade seguem
