@@ -18,24 +18,21 @@ test.use({
 	}
 });
 
-test.describe('proposta hetero (link-fantasma)', () => {
-	test('renderiza o documento e o orçamento dinâmico do casal', async ({ page }) => {
-		const errors: string[] = [];
-		page.on('pageerror', (e) => errors.push(e.message));
+// Os dados do casal vêm de uma planilha externa (mutável) — então não há ID
+// estável para testar o render feliz em e2e. Aqui cobrimos o comportamento
+// determinístico: ID inexistente ou falha na busca → 404. O mapeamento do
+// orçamento é coberto por testes unitários (src/lib/server/proposalSheet.test.ts).
+test.describe('proposta (link-fantasma)', () => {
+	const MISSING = '/proposta-realizar/id-que-nao-existe-000000000000';
 
-		await page.goto('/proposta-realizar/123456');
-
-		// Capa + seções-chave.
-		await expect(page.getByText('Celebrante de histórias reais')).toBeVisible();
-		await expect(page.getByRole('heading', { name: 'Cerimônia exclusiva' })).toBeVisible();
-		// Parte dinâmica (placeholder por enquanto).
-		await expect(page.getByText('Manoela e Ângelo')).toBeVisible();
-
-		expect(errors).toEqual([]);
+	test('ID inexistente (ou falha na busca) cai na página 404', async ({ page }) => {
+		const res = await page.goto(MISSING);
+		expect(res?.status()).toBe(404);
+		await expect(page.getByRole('heading', { name: /Esta página não existe/i })).toBeVisible();
 	});
 
-	test('é uma página não indexável (noindex)', async ({ page }) => {
-		await page.goto('/proposta-realizar/123456');
+	test('resposta em rota de proposta não é indexável (noindex)', async ({ page }) => {
+		await page.goto(MISSING);
 		const robots = page.locator('head meta[name="robots"]');
 		await expect(robots).toHaveAttribute('content', /noindex/);
 	});

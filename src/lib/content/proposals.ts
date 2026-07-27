@@ -1,8 +1,9 @@
 /**
  * Conteúdo das propostas comerciais (páginas-fantasma, não linkadas no site).
  * O texto institucional é o mesmo do PDF da Natasha. A parte dinâmica — o
- * orçamento de cada casal — é resolvida por ID via `getProposalBudget`, hoje
- * um placeholder a ser ligado a uma fonte real depois.
+ * orçamento de cada casal — é buscada por ID no `+page.server.ts` de cada
+ * proposta (ver `$lib/server/proposalSheet`), sobrescrevendo o `budget`-base
+ * daqui apenas nos campos que a planilha fornece.
  */
 
 export type ProposalTestimonial = {
@@ -83,6 +84,8 @@ export type ProposalBudget = {
 	investmentValue: string;
 	payment: string;
 	validity: string;
+	/** Observação opcional (vem da planilha). Só aparece no card se preenchida. */
+	notes?: string;
 };
 
 /** Proposta para casais héteros. */
@@ -365,13 +368,3 @@ export const amarProposal: ProposalContent = {
 		validity: 'Proposta válida por 3 dias. Reserva de data somente com contrato e sinal.'
 	}
 };
-
-/**
- * Orçamento por id do casal. PLACEHOLDER: hoje devolve o exemplo da própria
- * proposta. Depois, trocar por uma busca real (ex.: fetch a uma planilha/DB
- * no `+page.server.ts`) mantendo esta mesma forma.
- */
-export function getProposalBudget(content: ProposalContent, id: string): ProposalBudget {
-	void id; // TODO: usar o id para buscar os dados reais do casal
-	return content.budget;
-}

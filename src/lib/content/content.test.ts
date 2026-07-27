@@ -22,7 +22,7 @@ import {
 describe('dados de contato reais', () => {
 	it('mantém o e-mail e os telefones do site atual', () => {
 		expect(site.email).toBe('celebrantenatashacohn@gmail.com');
-		expect(site.phones.map((p) => p.label)).toEqual(['(21) 97438-3237', '(24) 98122-8689']);
+		expect(site.phones.map((p) => p.label)).toEqual(['(24) 98122-8689', '(21) 97438-3237']);
 	});
 
 	it('monta o link do WhatsApp com mensagem pré-preenchida', () => {

@@ -266,7 +266,7 @@
 <!-- ░░ Cerimônia exclusiva (orçamento dinâmico) ░░ -->
 <section class="py-20 lg:py-28">
 	<div class="container-editorial">
-		<div class="mx-auto max-w-3xl">
+		<div class="mx-auto max-w-4xl">
 			<SectionIntro
 				eyebrow="Sua proposta"
 				title={budget.title}
@@ -278,26 +278,42 @@
 				class="border-border bg-surface mt-12 flex flex-col divide-y divide-[var(--color-border-soft)] border"
 				use:reveal={{ y: 24 }}
 			>
-				<div class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between">
+				<div
+					class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:p-8"
+				>
 					<dt class="eyebrow text-ink-mute">Casal</dt>
-					<dd class="font-display text-h4 text-ink">{budget.couple}</dd>
+					<dd class="font-display text-h4 text-ink sm:text-right">{budget.couple}</dd>
 				</div>
-				<div class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between">
+				<div
+					class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:p-8"
+				>
 					<dt class="eyebrow text-ink-mute">Data</dt>
-					<dd class="text-ink text-lg">{budget.date}</dd>
+					<dd class="text-ink text-lg sm:text-right">{budget.date}</dd>
 				</div>
-				<div class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between">
+				<div
+					class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:p-8"
+				>
 					<dt class="eyebrow text-ink-mute">Local</dt>
-					<dd class="text-ink text-lg">{budget.venue}</dd>
+					<dd class="text-ink text-lg sm:text-right">{budget.venue}</dd>
 				</div>
-				<div class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between">
+				<div
+					class="flex flex-col gap-1 p-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:p-8"
+				>
 					<dt class="eyebrow text-ink-mute">{budget.investmentLabel}</dt>
-					<dd class="text-clay font-display text-h4">{budget.investmentValue}</dd>
+					<dd class="text-clay font-display text-h4 sm:max-w-[62%] sm:text-right">
+						{budget.investmentValue}
+					</dd>
 				</div>
-				<div class="flex flex-col gap-1 p-6">
+				<div class="flex flex-col gap-1 p-6 sm:p-8">
 					<dt class="eyebrow text-ink-mute">Forma de pagamento</dt>
 					<dd class="text-ink-soft mt-1">{budget.payment}</dd>
 				</div>
+				{#if budget.notes}
+					<div class="flex flex-col gap-1 p-6 sm:p-8">
+						<dt class="eyebrow text-ink-mute">Observação</dt>
+						<dd class="text-ink-soft mt-1 whitespace-pre-line">{budget.notes}</dd>
+					</div>
+				{/if}
 			</dl>
 
 			<p class="text-ink-mute mt-6 text-center text-sm">{budget.validity}</p>

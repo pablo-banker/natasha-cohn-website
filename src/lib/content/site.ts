@@ -21,8 +21,8 @@ export const site = {
 	locale: 'pt-BR',
 	email: 'celebrantenatashacohn@gmail.com',
 	phones: [
-		{ label: '(21) 97438-3237', href: 'tel:+5521974383237' },
-		{ label: '(24) 98122-8689', href: 'tel:+5524981228689' }
+		{ label: '(24) 98122-8689', href: 'tel:+5524981228689' },
+		{ label: '(21) 97438-3237', href: 'tel:+5521974383237' }
 	],
 	whatsapp: {
 		/** Número em formato internacional apenas com dígitos (para wa.me). */
