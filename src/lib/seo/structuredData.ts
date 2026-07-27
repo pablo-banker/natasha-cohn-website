@@ -40,7 +40,9 @@ export function professionalServiceSchema() {
 		url: site.url,
 		email: `mailto:${site.email}`,
 		telephone: site.phones.map((p) => p.href.replace('tel:', '')),
-		areaServed: site.serviceArea,
+		// Região-base estruturada (sinal de SEO local) — a celebrante também
+		// viaja ("onde o amor chamar"), mas a base declarada é o Rio de Janeiro.
+		areaServed: { '@type': 'AdministrativeArea', name: 'Rio de Janeiro' },
 		availableLanguage: site.languages,
 		founder: { '@id': `${site.url}/#natasha` },
 		sameAs: socialLinks.map((s) => s.href)

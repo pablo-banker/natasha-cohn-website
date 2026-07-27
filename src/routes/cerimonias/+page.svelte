@@ -17,7 +17,7 @@
 
 <Seo
 	seo={{
-		title: 'Cerimônias',
+		title: 'Cerimônias de casamento',
 		description:
 			'Casamentos, cerimônias bilíngues, apadrinhamento, celebrações de amor, mentoria para celebrantes e eventos corporativos — sempre com texto autoral escrito sob medida.',
 		path: '/cerimonias',

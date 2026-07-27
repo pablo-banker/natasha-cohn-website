@@ -5,8 +5,10 @@
 	let { seo }: { seo: SeoInput } = $props();
 
 	const canonical = $derived(new URL(seo.path, site.url).toString());
+	// Home: nome + o que ela faz (keyword principal). Demais páginas: título
+	// da página + marca. O slogan emocional segue na meta description.
 	const fullTitle = $derived(
-		seo.path === '/' ? `${site.legalName} — ${site.tagline}` : `${seo.title} | ${site.legalName}`
+		seo.path === '/' ? `${site.name} — ${seo.title}` : `${seo.title} | ${site.legalName}`
 	);
 	const image = $derived(seo.image ?? { url: '/og/og-default.jpg', alt: site.legalName });
 	const imageUrl = $derived(new URL(image.url, site.url).toString());
