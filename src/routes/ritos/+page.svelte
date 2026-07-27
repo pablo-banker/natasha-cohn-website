@@ -15,7 +15,7 @@
 
 <Seo
 	seo={{
-		title: 'Ritos',
+		title: 'Ritos de casamento',
 		description:
 			'Areias, handfasting, plantio da árvore, filtro dos sonhos, lava-pés e outros ritos cheios de significado. Nada é obrigatório: os ritos são sempre escolha do casal.',
 		path: '/ritos',

@@ -19,7 +19,7 @@
 
 <Seo
 	seo={{
-		title: 'A celebrante — Natasha Cohn',
+		title: 'A celebrante',
 		description:
 			'Celebrante desde 2018 e mais de 380 cerimônias exclusivas. Conheça a história de Natasha Cohn, seu jeito de escutar e de escrever cerimônias autorais em português, inglês e espanhol.',
 		path: '/a-celebrante',
