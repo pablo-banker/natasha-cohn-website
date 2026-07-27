@@ -26,7 +26,7 @@ export const site = {
 	],
 	whatsapp: {
 		/** Número em formato internacional apenas com dígitos (para wa.me). */
-		number: '5524974383237',
+		number: '5524981228689',
 		defaultMessage:
 			'Olá, Natasha! Encontrei seu site e gostaria de contar a nossa história para conhecer suas cerimônias.'
 	},
