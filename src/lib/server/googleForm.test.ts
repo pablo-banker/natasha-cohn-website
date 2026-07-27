@@ -55,4 +55,22 @@ describe('buildGoogleFormBody', () => {
 		expect(body.get('entry.1')).toBe('Ana e Marcos');
 		expect([...body.keys()]).toEqual(['entry.1']);
 	});
+
+	it('envia "Outro" idioma pelo mecanismo de outra opção do Forms', () => {
+		const body = buildGoogleFormBody(
+			{ ...data, language: 'Outro', languageOther: 'Italiano' },
+			{ language: 'entry.88' }
+		);
+		expect(body.get('entry.88')).toBe('__other_option__');
+		expect(body.get('entry.88.other_option_response')).toBe('Italiano');
+	});
+
+	it('divide a data (yyyy-mm-dd) em _year/_month/_day para a pergunta de data', () => {
+		const body = buildGoogleFormBody({ ...data, date: '2027-04-10' }, { date: 'entry.44' });
+		expect(body.get('entry.44_year')).toBe('2027');
+		expect(body.get('entry.44_month')).toBe('4');
+		expect(body.get('entry.44_day')).toBe('10');
+		// Não envia o valor único (que o Forms ignoraria numa pergunta de data).
+		expect(body.has('entry.44')).toBe(false);
+	});
 });

@@ -39,8 +39,24 @@ export function buildGoogleFormBody(
 	const body = new URLSearchParams();
 	for (const [field, entryId] of Object.entries(entries)) {
 		const value = values[field as ContactField];
-		if (entryId && value != null && String(value).trim() !== '') {
-			body.append(entryId, String(value));
+		if (!entryId || value == null || String(value).trim() === '') continue;
+		const raw = String(value).trim();
+
+		// Perguntas de DATA no Google Forms esperam três parâmetros
+		// (_year/_month/_day), não um valor único. O campo `date` do site é um
+		// <input type="date"> → sempre no formato yyyy-mm-dd.
+		const date = field === 'date' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw) : null;
+		if (date) {
+			body.append(`${entryId}_year`, date[1]);
+			body.append(`${entryId}_month`, String(Number(date[2])));
+			body.append(`${entryId}_day`, String(Number(date[3])));
+		} else if (field === 'language' && raw === 'Outro') {
+			// "Outra opção" do Google Forms: valor especial + o texto livre.
+			body.append(entryId, '__other_option__');
+			const other = data.languageOther?.trim();
+			if (other) body.append(`${entryId}.other_option_response`, other);
+		} else {
+			body.append(entryId, raw);
 		}
 	}
 	return body;

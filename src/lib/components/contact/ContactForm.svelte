@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { Check, AlertCircle } from '@lucide/svelte';
 	import Button from '$lib/components/ui/Button.svelte';
@@ -18,6 +19,11 @@
 
 	const errors = $derived(form?.errors ?? {});
 	const values = $derived(form?.values ?? {});
+
+	// Idioma escolhido — revela o campo livre "Outro". Captura só o valor
+	// inicial ecoado pelo servidor (repovoa no fluxo sem JS, via SSR); depois
+	// passa a acompanhar o select via bind:value.
+	let selectedLanguage = $state(untrack(() => form?.values?.language ?? ''));
 	const fieldClass =
 		'mt-2 w-full border border-border bg-surface px-4 py-3 text-ink transition-colors ' +
 		'placeholder:text-ink-mute/70 focus:border-clay focus:outline-none ' +
@@ -175,12 +181,31 @@
 
 			<p class="flex flex-col">
 				<label for="language" class="text-ink text-sm font-medium">Idioma desejado</label>
-				<select id="language" name="language" class={fieldClass}>
+				<select id="language" name="language" class={fieldClass} bind:value={selectedLanguage}>
 					<option value="">Selecione</option>
 					{#each languageOptions as option (option)}
-						<option value={option} selected={values.language === option}>{option}</option>
+						<option value={option}>{option}</option>
 					{/each}
 				</select>
+				{#if selectedLanguage === 'Outro'}
+					<input
+						id="languageOther"
+						name="languageOther"
+						type="text"
+						maxlength="60"
+						value={values.languageOther ?? ''}
+						aria-label="Qual idioma?"
+						aria-invalid={errors.languageOther ? 'true' : undefined}
+						aria-describedby={errors.languageOther ? 'languageOther-error' : undefined}
+						class={fieldClass}
+						placeholder="Qual idioma?"
+					/>
+					{#if errors.languageOther}
+						<span id="languageOther-error" class="text-clay-deep mt-1.5 text-sm">
+							{errors.languageOther}
+						</span>
+					{/if}
+				{/if}
 			</p>
 
 			<p class="flex flex-col sm:col-span-2">

@@ -28,6 +28,23 @@ describe('contactSchema', () => {
 		expect(result.success).toBe(true);
 	});
 
+	it('exige o idioma livre quando escolhem "Outro"', () => {
+		const result = contactSchema.safeParse({ ...valid, language: 'Outro' });
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(toFieldErrors(result.error).languageOther).toBe('Diga qual idioma.');
+		}
+	});
+
+	it('aceita "Outro" quando o idioma livre é preenchido', () => {
+		const result = contactSchema.safeParse({
+			...valid,
+			language: 'Outro',
+			languageOther: 'Italiano'
+		});
+		expect(result.success).toBe(true);
+	});
+
 	it('recusa e-mail inválido', () => {
 		const result = contactSchema.safeParse({ ...valid, email: 'nao-e-email' });
 		expect(result.success).toBe(false);
