@@ -9,10 +9,13 @@ export default defineConfig({
 		port: 4173,
 		reuseExistingServer: !process.env.CI,
 		// Muitos testes enviam o formulário; um limite alto evita o 429 do
-		// rate limiter (produção mantém o padrão de 3). Sem GOOGLE_FORM_URL o
-		// envio roda em modo desenvolvimento (nada é enviado de verdade).
+		// rate limiter (produção mantém o padrão de 3).
 		env: {
-			CONTACT_RATE_LIMIT: '1000'
+			CONTACT_RATE_LIMIT: '1000',
+			// Força o modo desenvolvimento no envio (nada é enviado de verdade),
+			// mesmo que o .env local tenha a GOOGLE_FORM_URL preenchida — evita
+			// criar respostas de teste no Google Form real.
+			GOOGLE_FORM_URL: ''
 		}
 	},
 	use: {
